@@ -12,18 +12,17 @@ public class Main {
 		final int Rlim = 12;
 		final int Glim = 13;
 		final int Blim = 14;
-		int minred, mingreen, minblue;
 		try {
 			FileInputStream file = new FileInputStream("input.txt");
 			Scanner inp = new Scanner(file).useDelimiter("\n");
 			while(inp.hasNext()) {
 				String line = "";
-				Boolean out = false;
 				line = inp.next();
 				id += 1;
-				minred = -1;
-				mingreen = -1;
-				minblue = -1;
+				Boolean out = false;
+				int minred = -1;
+				int mingreen = -1;
+				int minblue = -1;
 				String[] single = line.split(":"); //full line
 				String[] groups = single[1].split(";"); //everything after :
 				for(int i = 0; i < groups.length; i++) {
@@ -48,18 +47,13 @@ public class Main {
 							if (num > Blim) 
 								out = true;
 							break;
-						default:
-							System.out.println("Something went wrong");
-							break;
 						}
 					}
 				}
 				powSum += minred * mingreen * minblue;
 				
-				if(out == true)
-					continue; //this was found to be an impossible run
-				
-				IDsum += id;
+				if(out != true) //not found to be impossible
+					IDsum += id;
 				
 			}
 			inp.close();
