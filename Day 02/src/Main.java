@@ -31,8 +31,6 @@ public class Main {
 					for(int j = 0; j < each.length; j++) {
 						each[j] = each[j].substring(1,each[j].length()); //strip leading space
 						String[] pull = each[j].split(" "); //split into number + text
-						if(pull[1].charAt(pull[1].length()-1) == (char)(13)) //CARRIAGE RETURNS??!?
-							pull[1] = pull[1].substring(0, pull[1].length()-1);
 						int num = Integer.valueOf(pull[0]);
 						switch (pull[1]) {
 						case "red":
