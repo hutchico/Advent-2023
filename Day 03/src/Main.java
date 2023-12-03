@@ -3,6 +3,7 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Vector;
 
 public class Main {
 
@@ -15,20 +16,16 @@ public class Main {
 			Scanner file = new Scanner(src).useDelimiter("[\n\r]");
 			while(file.hasNext()) {
 				String input = file.next();
-				//System.out.println(input);
 				if(input.length() <= 1)
 					continue;
 				ArrayList<Integer> line = new ArrayList<Integer>();
 				for(int i = 0; i < input.length(); i++) {
 					line.add(-1); //initialize to .
 				}
-				//System.out.println(line.size());
 				int part = 0;
 				int place = 0;
 				for(int i = input.length()-1; i >= 0; i--) {
-					//System.out.println(part);
 					int bit = input.charAt(i);
-					//System.out.println((char)bit);
 					if(bit == 46) {
 						line.set(i, -1);
 						if(part > 0) {
@@ -47,7 +44,11 @@ public class Main {
 					}
 					
 					else { //symbol
-						line.set(i, -2);
+						if(bit == 42)
+							line.set(i, -3);
+						else
+							line.set(i, -2);
+						
 						if(part > 0) {
 							for(int z = 0; z < place; z++) {
 								int prev = z + i + 1;
@@ -68,12 +69,6 @@ public class Main {
 					}
 						
 				}
-				/*
-				for(int i = 0; i < line.size(); i++) {
-					System.out.printf("%d", line.get(i));
-					System.out.printf("%s", " ");
-				}
-				*/
 				schema.add(line);
 			}
 			file.close();
@@ -81,20 +76,19 @@ public class Main {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		print_2d(schema);
 		int y = schema.size();
 		int x = schema.get(0).size();
 		int partSum = 0;
-		
+		int gearSum = 0;
 		for(int i = 0; i < y; i++) {
 			for(int j = 0; j < x; j++) {
 				int bit = schema.get(i).get(j);
 				if (bit == '.') //blank
 					continue;
-				else if (bit == -2) { //symbol
+				else if (bit == -2 || bit == -3) { //symbol for part 1
 					//8 possible situations, ignore duplicates
-					//ArrayList<Integer> surround = new ArrayList<Integer>();
 					HashMap<Integer,Integer> li = new HashMap<Integer,Integer>();
+					int pnum = 0;
 					if(i > 0) {
 						if(j > 0)
 							li.put(schema.get(i-1).get(j-1),schema.get(i-1).get(j-1));
@@ -113,12 +107,22 @@ public class Main {
 						li.put(schema.get(i).get(j-1),schema.get(i).get(j-1));
 					if(j < x)
 						li.put(schema.get(i).get(j+1),schema.get(i).get(j+1));
-					
-					//Object[] test = li.values().toArray();
+					li.remove(-1);
+					li.remove(-2);
+					li.remove(-3);
 					for(int value : li.values()) {
-						if(value > 0) //something in the above code is adding -2 and idk where it is
-							partSum += value;
+						partSum += value;
 					}
+					
+					if(bit == -3) //special case for part 2
+						if(li.size() == 2) {
+							int g = 1;
+							for(int val : li.values()) {
+								g *= val;
+							}
+							gearSum += g;
+						}
+					
 					li.clear();
 				}
 				else
@@ -127,14 +131,15 @@ public class Main {
 		}
 		
 		System.out.println(partSum);
+		System.out.println(gearSum);
 		
 	}
 	
-	public static void print_2d(ArrayList<ArrayList<Integer>> chart) {
+	public static void print_2d(ArrayList<ArrayList<Integer>> chart) { //DEBUG
 		for(int i = 0; i < chart.size(); i++) {
 			for(int j = 0; j < chart.get(0).size(); j++) {
 				int res = chart.get(i).get(j);
-				if(res == -2)
+				if(res < -1)
 					res = 0;
 				System.out.printf("%d", res);
 				if (res < 0)
