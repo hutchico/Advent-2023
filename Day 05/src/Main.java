@@ -3,7 +3,7 @@ import java.util.Scanner;
 import java.util.Vector;
 import java.util.Collections;
 
-public class Part1 {
+public class Main {
 
 	public static void main(String[] args) throws FileNotFoundException { //ignoring it now
 		FileInputStream file = new FileInputStream("input.txt");
