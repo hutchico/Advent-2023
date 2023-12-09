@@ -22,7 +22,6 @@ public class Main {
 			for(int i = 0; i < line.length; i++) {
 				entries.add(Integer.valueOf(line[i]));
 			}
-			//last.add(entries.get(entries.size() - 1)); //dunno why this was breaking it, leaving it to sort later
 			while(!oops_all_zeroes(entries)) {
 				for(int i = 0; i < entries.size() - 1; i++) {
 					diff.add(entries.get(i + 1) - entries.get(i));
