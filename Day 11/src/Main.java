@@ -20,6 +20,7 @@ public class Main {
 			}
 			chart.add(line);
 		}
+		inp.close();
 		for(int i = 0; i < chart.size(); i++) {
 			if(check_horiz(chart.get(i))) {
 				expand_v.add(i);
@@ -30,65 +31,84 @@ public class Main {
 				expand_h.add(i);
 			}
 		}
-		
-		System.out.println(expand_v.size());
-		System.out.println(expand_h.size());
-		
-		for(int i = expand_v.size() - 1; i >= 0; i--) {
-			ArrayList<Character> line = new ArrayList<>();
-			for(int j = 0; j < chart.size(); j++) {
-				line.add('.');
-			}
-			chart.add(expand_v.get(i), line);
-		}
-		
-		for(int i = expand_h.size() - 1; i >= 0; i--) {
-			int pos = expand_h.get(i);
-			for(int j = 0; j < chart.size(); j++) {
-				ArrayList<Character> li = chart.get(j);
-				li.add(pos, '.');
-				chart.set(j,li);
-			}
-		}
-		
-		for(int i = 0; i < chart.size(); i++) {
-			for(int j = 0; j < chart.get(0).size(); j++) {
-				System.out.printf("%c ", chart.get(i).get(j));
-			}
-			System.out.println();
-		}
-		
 		for(int i = 0; i < chart.size(); i++) {
 			for(int j = 0; j < chart.get(0).size(); j++) {
 				if(chart.get(i).get(j) != '.') {
-					locations.add(new Pair(i,j));
-					System.out.println(i + " " + j);
+					locations.add(new Pair(j,i));
 				}
 			}
 		}
-		int gsum = 0;
+		
+		int part1 = 0;
+		long part2 = 0;
 		for(int i = 0; i < locations.size(); i++) {
 			for(int j = i + 1; j < locations.size(); j++) {
-				int sum;
 				if(i == j)
 					continue;
-				int x1, x2, y1, y2;
-				x1 = locations.get(i).get_key();
-				x2 = locations.get(j).get_key();
-				y1 = locations.get(i).get_value();
-				y2 = locations.get(j).get_value();
-				sum = Manhattan(x1,y1,x2,y2);
-				gsum += sum;
-				//System.out.println(locations.get(i).get_key() + "," + locations.get(i).get_value() + " " + locations.get(j).get_key() + "," + locations.get(j).get_value());
-				System.out.println((i + 1) + " " + (j + 1) + " " + sum);
+				long x1 = locations.get(i).get_key();
+				long x2 = locations.get(j).get_key();
+				long y1 = locations.get(i).get_value();
+				long y2 = locations.get(j).get_value();
+				int p1x1 = (int) x1;
+				int p1x2 = (int) x2;
+				int p1y1 = (int) y1;
+				int p1y2 = (int) y2;
+				//count how many jumps occur between x1 and x2, and y1 and y2
+				long greater = x1 > x2 ? x1 : x2;
+				long lesser = greater == x2 ? x1 : x2;
+				int xjumps = 0;
+				if(x1 != x2) {
+					for(int r = 0; r < expand_h.size(); r++) {
+						if (expand_h.get(r) > lesser && expand_h.get(r) < greater)
+							xjumps++;
+					}
+				}
+				
+				greater = y1 > y2 ? y1 : y2;
+				lesser = greater == y2 ? y1 : y2;
+				int yjumps = 0;
+				if(y1 != y2) {
+					for(int r = 0; r < expand_v.size(); r++) {
+						if (expand_v.get(r) > lesser && expand_v.get(r) < greater)
+							yjumps++;
+					}
+				}
+				//add 1m to each per jump
+				int p1x = xjumps * 2 - xjumps;
+				int p1y = yjumps * 2 - yjumps;
+				long xjumpt = xjumps * 1000000 - xjumps;
+				long yjumpt = yjumps * 1000000 - yjumps;
+				
+				greater = x1 > x2 ? 1 : 2;
+				lesser = y1 > y2 ? 1 : 2; //more accurately named "greater(but y instead)"
+				
+				if(greater == 1) {
+					x1 += xjumpt;
+					p1x1 += p1x;
+				}
+				else {
+					x2 += xjumpt;
+					p1x2 += p1x;
+				}
+				
+				if(lesser == 1) {
+					y1 += yjumpt;
+					p1y1 += p1y;
+				}
+				else {
+					y2 += yjumpt;
+					p1y2 += p1y;
+				}
+				part1 += Manhattan(p1x1,p1y1,p1x2,p1y2);
+				part2 += Manhattan(x1,y1,x2,y2);
 			}
 		}
-		System.out.println(gsum);
+		System.out.println(part1);
+		System.out.println(part2);
 		
 	}
 
-	public static int Manhattan(int x1, int y1, int x2, int y2) {
-		System.out.println(x1 + ", " + y1 + " : " + x2 + "," + y2);
+	public static long Manhattan(long x1, long y1, long x2, long y2) {
 		return Math.abs(x1 - x2) + Math.abs(y1 - y2);
 	}
 	
