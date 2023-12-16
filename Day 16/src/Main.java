@@ -43,7 +43,7 @@ public class Main {
 			lumens = res > lumens ? res : lumens;
 		}
 		for(int j = 0; j < xrng; j++) { //bottom edge
-			res = beam(map,j,yrng,Direction.Down);
+			res = beam(map,j,yrng,Direction.Up);
 			lumens = res > lumens ? res : lumens;
 		}
 		System.out.println(lumens);
