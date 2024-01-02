@@ -50,7 +50,7 @@ public class Main {
 			int jcount;
 			if(char_counts.get('J') != null) {
 				jcount = char_counts.get('J');
-				char_counts.remove('J');
+				char_counts.remove('J'); 
 				ArrayList<Pair<Character,Integer>> counts = new ArrayList<Pair<Character,Integer>>();
 				
 				for(Map.Entry<Character, Integer> ea : char_counts.entrySet()) {

@@ -1,6 +1,5 @@
 import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
@@ -28,38 +27,38 @@ public class Main {
 		
 		lumens = beam(map,0,0,Direction.Right);
 		System.out.println(lumens);
-		int res = -1;
+		
 		lumens = 0;
 		for(int i = 0; i < yrng; i++) { //left edge
-			res = beam(map,0,i,Direction.Right);
+			int res = beam(map,0,i,Direction.Right);
 			lumens = res > lumens ? res : lumens;
 		}
 		for(int i = 0; i < yrng; i++) { //right edge
-			res = beam(map,xrng,i,Direction.Left);
+			int res = beam(map,xrng,i,Direction.Left);
 			lumens = res > lumens ? res : lumens;
 		}
 		for(int j = 0; j < xrng; j++) { //top edge
-			res = beam(map,j,0,Direction.Down);
+			int res = beam(map,j,0,Direction.Down);
 			lumens = res > lumens ? res : lumens;
 		}
 		for(int j = 0; j < xrng; j++) { //bottom edge
-			res = beam(map,j,yrng,Direction.Up);
+			int res = beam(map,j,yrng,Direction.Up);
 			lumens = res > lumens ? res : lumens;
 		}
 		System.out.println(lumens);
 	}
 	
-	public static int beam(ArrayList<ArrayList<Tile>> map, int start_x, int start_y, Direction dir) {
+	public static int beam(ArrayList<ArrayList<Tile>> map, int start_x, int start_y, Direction start_dir) {
 		Queue<Trio> order = new LinkedList<>();
 		int lumens = 0;
-		order.add(new Trio<Integer,Integer,Direction>(start_x,start_y,dir));
+		order.add(new Trio<Integer,Integer,Direction>(start_x,start_y,start_dir));
 		while(order.size() > 0) {
 			Trio current = order.poll();
 			
 			int next_x1 = (int) current.get_key();
 			int next_y1 = (int) current.get_value();
-			int next_x2 = (int) current.get_key();
-			int next_y2 = (int) current.get_value();
+			int next_x2 = next_x1;
+			int next_y2 = next_y1;
 			Direction old_dir = (Direction) current.get_third();
 			Direction next1 = null;
 			Direction next2 = null; //potential split
@@ -139,11 +138,11 @@ public class Main {
 			}
 		}
 		
-		for(int b = 0; b < map.size(); b++) {
-			for(int c = 0; c < map.get(0).size(); c++) {
-				if(map.get(b).get(c).state())
+		for(int my = 0; my < map.size(); my++) {
+			for(int mx = 0; mx < map.get(0).size(); mx++) {
+				if(map.get(my).get(mx).state())
 					lumens++;
-				map.get(b).get(c).reset();
+				map.get(my).get(mx).reset();
 			}
 		}
 		

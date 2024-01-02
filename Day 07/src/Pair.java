@@ -22,6 +22,15 @@ public class Pair<K,V>{
 		return value;
 	}
 	
+	@Override
+	public boolean equals(Object o) {
+		if (o == this)
+			return true;
+		Pair p = (Pair) o;
+		
+		return this.key == p.key && this.value == p.value;
+	}
+	
 	private K key;
 	private V value;
 }
